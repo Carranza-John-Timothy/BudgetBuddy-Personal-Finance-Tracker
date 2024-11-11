@@ -1,9 +1,5 @@
+import java.io.*;
 import java.util.ArrayList;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.Date;
 
 public class User {
@@ -36,11 +32,13 @@ public class User {
         this.password = password;
     }
 
-    public void addIncome(Income income) {
+    public void addIncome(double amount, String description, Category category) {
+        Income income = new Income(amount, description, new Date(), category);
         incomeList.add(income);
     }
 
-    public void addExpense(Expense expense) {
+    public void addExpense(double amount, String description, String note, Category category) {
+        Expense expense = new Expense(amount, description, new Date(), note, category);
         expenseList.add(expense);
     }
 
@@ -88,7 +86,7 @@ public class User {
         System.out.println("Income Sources:");
         for (int i = 0; i < incomeList.size(); i++) {
             Income income = incomeList.get(i);
-            System.out.println((i + 1) + ". " + income.getDescription() + ": " + income.getAmount());
+            System.out.println((i + 1) + ". " + income.getDescription() + ": " + income.getAmount() + " (Category: " + income.getCategory().getName() + ")");
         }
     }
 
@@ -96,17 +94,17 @@ public class User {
         System.out.println("Expenses:");
         for (int i = 0; i < expenseList.size(); i++) {
             Expense expense = expenseList.get(i);
-            System.out.println((i + 1) + ". " + expense.getDescription() + ": " + expense.getAmount());
+            System.out.println((i + 1) + ". " + expense.getDescription() + ": " + expense.getAmount() + " (Category: " + expense.getCategory().getName() + ")");
         }
     }
 
     public void saveData(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Income income : incomeList) {
-                writer.write("Income," + income.getDescription() + "," + income.getAmount() + "\n");
+                writer.write("Income," + income.getDescription() + "," + income.getAmount() + "," + income.getCategory().getName() + "\n");
             }
             for (Expense expense : expenseList) {
-                writer.write("Expense," + expense.getDescription() + "," + expense.getAmount() + "\n");
+                writer.write("Expense," + expense.getDescription() + "," + expense.getAmount() + "," + expense.getNote() + "," + expense.getCategory().getName() + "\n");
             }
         } catch (IOException e) {
             System.out.println("Error saving data: " + e.getMessage());
@@ -119,9 +117,13 @@ public class User {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts[0].equals("Income")) {
-                    addIncome(new Income(Double.parseDouble(parts[2]), parts[1], new Date()));
+                    // Create a new category from the last part of the line
+                    Category category = new Category(parts[3]);
+                    addIncome(Double.parseDouble(parts[2]), parts[1], category);
                 } else if (parts[0].equals("Expense")) {
-                    addExpense(new Expense(Double.parseDouble(parts[2]), parts[1], new Date(), "Description"));
+                    // Create a new category from the last part of the line
+                    Category category = new Category(parts[4]);
+                    addExpense(Double.parseDouble(parts[2]), parts[1], parts[3], category);
                 }
             }
         } catch (IOException e) {

@@ -4,11 +4,16 @@ public class Income {
     private double amount;
     private String description;
     private Date date;
+    private Category category;
 
     public Income(double amount, String description, Date date) {
         this.amount = amount;
         this.description = description;
         this.date = date;
+        this.category = category;
+    }
+
+    public Income(double amount, String description, Date date, Category category) {
     }
 
     public double getAmount() {
@@ -22,4 +27,9 @@ public class Income {
     public Date getDate() {
         return date;
     }
+
+    public Category getCategory() {
+        return category;
+    }
+
 }

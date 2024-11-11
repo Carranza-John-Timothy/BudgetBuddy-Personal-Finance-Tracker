@@ -29,7 +29,11 @@ public class Main {
                     String incomeDesc = scanner.nextLine();
                     System.out.print("Enter income amount: ");
                     double incomeAmount = scanner.nextDouble();
-                    user.addIncome(new Income(incomeAmount, incomeDesc, new Date()));
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Enter income category: ");
+                    String incomeCategoryName = scanner.nextLine();
+                    Category incomeCategory = new Category(incomeCategoryName); // Create category
+                    user.addIncome(incomeAmount, incomeDesc, incomeCategory); // Call updated method
                     break;
 
                 case 2: // Add Expense
@@ -37,9 +41,13 @@ public class Main {
                     String expenseDesc = scanner.nextLine();
                     System.out.print("Enter expense amount: ");
                     double expenseAmount = scanner.nextDouble();
+                    scanner.nextLine(); // Consume newline
                     System.out.print("Enter a note (optional): ");
                     String expenseNote = scanner.nextLine(); // Read the note
-                    user.addExpense(new Expense(expenseAmount, expenseDesc, new Date(), expenseNote));
+                    System.out.print("Enter expense category: ");
+                    String expenseCategoryName = scanner.nextLine();
+                    Category expenseCategory = new Category(expenseCategoryName); // Create category
+                    user.addExpense(expenseAmount, expenseDesc, expenseNote, expenseCategory); // Call updated method
                     break;
 
                 case 3: // Edit Income
@@ -63,9 +71,13 @@ public class Main {
                     String newExpenseDesc = scanner.nextLine();
                     System.out.print("Enter new expense amount: ");
                     double newExpenseAmount = scanner.nextDouble();
+                    scanner.nextLine(); // Consume newline
                     System.out.print("Enter a new note (optional): ");
                     String newExpenseNote = scanner.nextLine(); // Read the new note
-                    user.editExpense (expenseIndex, new Expense(newExpenseAmount, newExpenseDesc, new Date(), newExpenseNote));
+                    System.out.print("Enter new expense category: ");
+                    String newExpenseCategoryName = scanner.nextLine(); // Read the new category
+                    Category newExpenseCategory = new Category(newExpenseCategoryName); // Create new category
+                    user.editExpense(expenseIndex, new Expense(newExpenseAmount, newExpenseDesc, new Date(), newExpenseNote, newExpenseCategory));
                     break;
 
                 case 5: // Delete Income
