@@ -1,5 +1,5 @@
- BudgetBuddy - Personal Finance Tracker
-
+## BudgetBuddy - Personal Finance Tracker
+ 
 BudgetBuddy is a personal finance tracker that helps users manage their income and expenses effectively. It allows users to register, log in, and track their financial transactions, providing insights into their spending habits and overall financial health.
 
 ## Features
