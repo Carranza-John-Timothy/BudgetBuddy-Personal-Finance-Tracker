@@ -33,12 +33,13 @@ git clone https://github.com/Carranza-John-Timothy/BudgetBuddy-Personal-Finance-
 5. Follow the in-program instructions to register, log in, and use the application.
 
 ## Running the Program
-Open the project in your IDE or text editor.
-Compile the Java files.
-Run the Main class.
-Follow the on-screen instructions to register a new account or log in to an existing account.
-Use the transaction menu to add income or expenses, view transaction history, and manage your financial data.
-For any inquiries, please contact:
+1.  Open the project in your IDE or text editor.
+2. Compile the Java files.
+3. Run the Main class.
+4. Follow the on-screen instructions to register a new account or log in to an existing account.
+5. Use the transaction menu to add income or expenses, view transaction history, and manage your financial data.
+
+## For any inquiries, please contact:
 
 John Timothy S. Carranza - carranza.timothy12@gmail.com
 GitHub: Carranza-John-Timothy
