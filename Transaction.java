@@ -1,6 +1,8 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public abstract class Transaction {
+public abstract class Transaction implements Serializable {
+    private static final long serialVersionUID = 1L; // For serialization
     protected double amount;
     protected String description;
     protected Date date;

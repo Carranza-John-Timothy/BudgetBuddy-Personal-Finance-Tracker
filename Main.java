@@ -5,8 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        TransactionManager transactionManager = new TransactionManager();
-        User currentUser  = null;
+        User currentUser  = null; // Initialize currentUser  as null
 
         while (true) {
             System.out.println("\nWelcome to the Transaction Management System");
@@ -26,7 +25,7 @@ public class Main {
                     currentUser  = loginUser (scanner);
                     if (currentUser  != null) {
                         System.out.println("Login successful! Welcome, " + currentUser .getUsername());
-                        transactionMenu(scanner, transactionManager);
+                        transactionMenu(scanner, currentUser ); // Pass currentUser  to transactionMenu
                     } else {
                         System.out.println("Login failed. Please check your credentials.");
                     }
@@ -98,10 +97,11 @@ public class Main {
         }
     }
 
-    private static void transactionMenu(Scanner scanner, TransactionManager transactionManager) {
+    private static void transactionMenu(Scanner scanner, User currentUser ) {
+        TransactionManager transactionManager = new TransactionManager(currentUser ); // Create TransactionManager with currentUser 
         while (true) {
             System.out.println("\nTransaction Menu:");
-            System.out.printf("Current Balance: %.2f PHP\n", transactionManager.getBalance()); // Display current balance
+            System.out.printf("Current Balance: %.2f PHP\n", transactionManager.getBalance());
             System.out.println("1. Add Income");
             System.out.println("2. Add Expense");
             System.out.println("3. View Transactions");
@@ -111,28 +111,23 @@ public class Main {
             int choice = getValidIntegerInput(scanner);
 
             switch (choice) {
-                case 1: // Add Income
+                case 1:
                     addIncome(scanner, transactionManager);
                     break;
-
-                case 2: // Add Expense
+                case 2:
                     addExpense(scanner, transactionManager);
                     break;
-
-                case 3: // View Transactions
+                case 3:
                     viewTransactions(transactionManager);
                     break;
-
-                case 4: // Logout
+                case 4:
                     System.out.println("Logging out...");
-                    return;
-
+                    return; // Logout and return to main menu
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
         }
     }
-
     private static void addIncome(Scanner scanner, TransactionManager transactionManager) {
         System.out.print("Enter income amount: ");
         double amount = getValidDoubleInput(scanner);
