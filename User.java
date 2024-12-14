@@ -41,6 +41,25 @@ public class User implements Serializable {
         return null; // Login failed
     }
 
+    // Change access modifier to public
+    public static void loadUsers() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("users.dat"))) {
+            users = (Map<String, String>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            // If the file doesn't exist or can't be read, we can ignore it
+            // and start with an empty users map
+        }
+    }
+
+    // Change access modifier to public
+    public static void saveUsers() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("users.dat"))) {
+            oos.writeObject(users);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void loadUserData() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(username + ".dat"))) {
             this.balance = ois.readDouble();
@@ -68,5 +87,9 @@ public class User implements Serializable {
             balance -= transaction.getAmount();
         }
         saveUserData(); // Save data after adding transaction
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance; // Setter for balance
     }
 }

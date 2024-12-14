@@ -1,2 +1,0 @@
-Income: Income - Amount: 100.0 - Date: Sat Dec 14 18:11:02 CST 2024
-Expense: Expense - Amount: 50.0 - Date: Sat Dec 14 18:11:13 CST 2024

@@ -13,6 +13,10 @@ public abstract class Transaction implements Serializable {
         this.date = date;
     }
 
+    public void setAmount(double amount) {
+        this.amount = amount; // Setter for amount
+    }
+
     public double getAmount() {
         return amount;
     }
