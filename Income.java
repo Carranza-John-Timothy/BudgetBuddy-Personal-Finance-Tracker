@@ -1,35 +1,12 @@
 import java.util.Date;
 
-public class Income {
-    private double amount;
-    private String description;
-    private Date date;
-    private Category category;
-
+public class Income extends Transaction {
     public Income(double amount, String description, Date date) {
-        this.amount = amount;
-        this.description = description;
-        this.date = date;
-        this.category = category;
+        super(amount, description, date);
     }
 
-    public Income(double amount, String description, Date date, Category category) {
+    @Override
+    public String toString() {
+        return "Income: " + getDescription() + " - Amount: " + getAmount() + " - Date: " + date;
     }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public String getDescription() {
-        return description; // This is the getDescription method
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
 }

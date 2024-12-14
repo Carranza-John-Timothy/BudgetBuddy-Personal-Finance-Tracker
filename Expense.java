@@ -1,37 +1,15 @@
 import java.util.Date;
 
-public class Expense {
-    private double amount;
-    private String description;
-    private Date date;
-    private String note;
-    private Category category;
+public class Expense extends Transaction {
+    private String note; // Optional note for Expense
 
-    public Expense(double amount, String description, Date date, String note, Category category) {
-        this.amount = amount;
-        this.description = description;
-        this.date = date;
-        this.note = note;
-        this.category = this.category;
+    public Expense(double amount, String description, Date date, String note) {
+        super(amount, description, date);
+        this.note = note; // Initialize the note field
     }
 
-    public double getAmount() {
-        return amount;
-    }
-
-    public String getDescription() {
-        return description; // This is the getDescription method
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public Category getCategory() {
-        return category;
+    @Override
+    public String toString() {
+        return "Expense: " + getDescription() + " - Amount: " + getAmount() + " - Date: " + date + (note != null ? " (Note: " + note + ")" : "");
     }
 }

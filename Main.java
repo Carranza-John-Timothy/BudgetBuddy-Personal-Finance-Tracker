@@ -1,115 +1,191 @@
-import java.util.Date;
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        User user = new User("john_doe", "password123");
-        user.loadData("user_data.txt"); // Load data at startup
+        TransactionManager transactionManager = new TransactionManager();
+        User currentUser  = null;
 
         while (true) {
-            System.out.println("\nMenu:");
-            System.out.println("1. Add Income");
-            System.out.println("2. Add Expense");
-            System.out.println("3. Edit Income");
-            System.out.println("4. Edit Expense");
-            System.out.println("5. Delete Income");
-            System.out.println("6. Delete Expense");
-            System.out.println("7. Display Income");
-            System.out.println("8. Display Expenses");
-            System.out.println("9. Exit");
+            System.out.println("\nWelcome to the Transaction Management System");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
+            System.out.println("3. Exit");
             System.out.print("Choose an option: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int choice = getValidIntegerInput(scanner);
 
             switch (choice) {
-                case 1: // Add Income
-                    System.out.print("Enter income description: ");
-                    String incomeDesc = scanner.nextLine();
-                    System.out.print("Enter income amount: ");
-                    double incomeAmount = scanner.nextDouble();
-                    scanner.nextLine(); // Consume newline
-                    System.out.print("Enter income category: ");
-                    String incomeCategoryName = scanner.nextLine();
-                    Category incomeCategory = new Category(incomeCategoryName); // Create category
-                    user.addIncome(incomeAmount, incomeDesc, incomeCategory); // Call updated method
+                case 1: // Register
+                    registerUser (scanner);
                     break;
 
-                case 2: // Add Expense
-                    System.out.print("Enter expense description: ");
-                    String expenseDesc = scanner.nextLine();
-                    System.out.print("Enter expense amount: ");
-                    double expenseAmount = scanner.nextDouble();
-                    scanner.nextLine(); // Consume newline
-                    System.out.print("Enter a note (optional): ");
-                    String expenseNote = scanner.nextLine(); // Read the note
-                    System.out.print("Enter expense category: ");
-                    String expenseCategoryName = scanner.nextLine();
-                    Category expenseCategory = new Category(expenseCategoryName); // Create category
-                    user.addExpense(expenseAmount, expenseDesc, expenseNote, expenseCategory); // Call updated method
+                case 2: // Login
+                    currentUser  = loginUser (scanner);
+                    if (currentUser  != null) {
+                        System.out.println("Login successful! Welcome, " + currentUser .getUsername());
+                        transactionMenu(scanner, transactionManager);
+                    } else {
+                        System.out.println("Login failed. Please check your credentials.");
+                    }
                     break;
 
-                case 3: // Edit Income
-                    user.displayIncome();
-                    System.out.print("Enter the index of the income to edit: ");
-                    int incomeIndex = scanner.nextInt() - 1; // Convert to zero-based index
-                    scanner.nextLine(); // Consume newline
-                    System.out.print("Enter new income description: ");
-                    String newIncomeDesc = scanner.nextLine();
-                    System.out.print("Enter new income amount: ");
-                    double newIncomeAmount = scanner.nextDouble();
-                    user.editIncome(incomeIndex, new Income(newIncomeAmount, newIncomeDesc, new Date()));
-                    break;
-
-                case 4: // Edit Expense
-                    user.displayExpenses();
-                    System.out.print("Enter the index of the expense to edit: ");
-                    int expenseIndex = scanner.nextInt() - 1; // Convert to zero-based index
-                    scanner.nextLine(); // Consume newline
-                    System.out.print("Enter new expense description: ");
-                    String newExpenseDesc = scanner.nextLine();
-                    System.out.print("Enter new expense amount: ");
-                    double newExpenseAmount = scanner.nextDouble();
-                    scanner.nextLine(); // Consume newline
-                    System.out.print("Enter a new note (optional): ");
-                    String newExpenseNote = scanner.nextLine(); // Read the new note
-                    System.out.print("Enter new expense category: ");
-                    String newExpenseCategoryName = scanner.nextLine(); // Read the new category
-                    Category newExpenseCategory = new Category(newExpenseCategoryName); // Create new category
-                    user.editExpense(expenseIndex, new Expense(newExpenseAmount, newExpenseDesc, new Date(), newExpenseNote, newExpenseCategory));
-                    break;
-
-                case 5: // Delete Income
-                    user.displayIncome();
-                    System.out.print("Enter the index of the income to delete: ");
-                    int deleteIncomeIndex = scanner.nextInt() - 1; // Convert to zero-based index
-                    user.deleteIncome(deleteIncomeIndex);
-                    break;
-
-                case 6: // Delete Expense
-                    user.displayExpenses();
-                    System.out.print("Enter the index of the expense to delete: ");
-                    int deleteExpenseIndex = scanner.nextInt() - 1; // Convert to zero-based index
-                    user.deleteExpense(deleteExpenseIndex);
-                    break;
-
-                case 7: // Display Income
-                    user.displayIncome();
-                    break;
-
-                case 8: // Display Expenses
-                    user.displayExpenses();
-                    break;
-
-                case 9: // Exit
-                    user.saveData("user_data.txt"); // Save data before exiting
+                case 3: // Exit
                     System.out.println("Exiting the application. Goodbye!");
                     scanner.close();
                     return;
 
                 default:
                     System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+
+    private static void registerUser (Scanner scanner) {
+        while (true) {
+            System.out.print("Enter username: ");
+            String username = scanner.nextLine().trim();
+            System.out.print("Enter password: ");
+            String password = scanner.nextLine().trim();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                System.out.println("Username and password cannot be empty or whitespace. Please try again.");
+                continue; // Ask for input again
+            }
+
+            if (User .register(username, password)) {
+                System.out.println("Registration successful!");
+                return; // Exit the registration loop
+            } else {
+                System.out.println("Username already taken. Please try again.");
+            }
+        }
+    }
+
+    private static User loginUser (Scanner scanner) {
+        while (true) {
+            System.out.print("Enter username: ");
+            String username = scanner.nextLine().trim();
+            System.out.print("Enter password: ");
+            String password = scanner.nextLine().trim();
+    
+            User user = User.login(username, password);
+            if (user != null) {
+                return user; // Return the logged-in user
+            } else {
+                System.out.println("Invalid credentials. Please try again.");
+                System.out.println("1. Try again");
+                System.out.println("2. Go back to main menu");
+                System.out.println("3. Register a new account");
+                System.out.print("Choose an option: ");
+    
+                int choice = getValidIntegerInput(scanner);
+                switch (choice) {
+                    case 1:
+                        // Continue the loop to try logging in again
+                        break;
+                    case 2:
+                        return null; // Go back to the main menu
+                    case 3:
+                        registerUser (scanner); // Register a new account
+                        return null; // Go back to the main menu after registration
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                }
+            }
+        }
+    }
+
+    private static void transactionMenu(Scanner scanner, TransactionManager transactionManager) {
+        while (true) {
+            System.out.println("\nTransaction Menu:");
+            System.out.printf("Current Balance: %.2f PHP\n", transactionManager.getBalance()); // Display current balance
+            System.out.println("1. Add Income");
+            System.out.println("2. Add Expense");
+            System.out.println("3. View Transactions");
+            System.out.println("4. Logout");
+            System.out.print("Choose an option: ");
+
+            int choice = getValidIntegerInput(scanner);
+
+            switch (choice) {
+                case 1: // Add Income
+                    addIncome(scanner, transactionManager);
+                    break;
+
+                case 2: // Add Expense
+                    addExpense(scanner, transactionManager);
+                    break;
+
+                case 3: // View Transactions
+                    viewTransactions(transactionManager);
+                    break;
+
+                case 4: // Logout
+                    System.out.println("Logging out...");
+                    return;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+    }
+
+    private static void addIncome(Scanner scanner, TransactionManager transactionManager) {
+        System.out.print("Enter income amount: ");
+        double amount = getValidDoubleInput(scanner);
+        System.out.print("Enter income description: ");
+        String description = scanner.nextLine().trim();
+        transactionManager.addIncome(amount, description);
+        System.out.println("Income added successfully.");
+    }
+
+    private static void addExpense(Scanner scanner, TransactionManager transactionManager) {
+        System.out.print("Enter expense amount: ");
+        double amount = getValidDoubleInput(scanner);
+        System.out.print("Enter expense description: ");
+        String description = scanner.nextLine().trim();
+        transactionManager.addExpense(amount, description);
+        System.out.println("Expense added successfully.");
+    }
+
+    private static double getValidDoubleInput(Scanner scanner) {
+        while (true) {
+            try {
+                return scanner.nextDouble();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.next(); // Clear the invalid input
+            } finally {
+                scanner.nextLine(); // Consume the newline character
+            }
+        }
+    }
+
+    private static int getValidIntegerInput(Scanner scanner) {
+        while (true) 
+        {
+            try {
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+                scanner.next(); // Clear the invalid input
+            } finally {
+                scanner.nextLine(); // Consume the newline character
+            }
+        }
+    }
+
+    private static void viewTransactions(TransactionManager transactionManager) {
+        List<Transaction> transactions = transactionManager.getTransactions();
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found.");
+        } else {
+            System.out.println("Transactions:");
+            for (Transaction transaction : transactions) {
+                System.out.println(transaction); // Use the toString() method of Transaction
             }
         }
     }
