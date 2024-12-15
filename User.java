@@ -46,8 +46,8 @@ public class User implements Serializable {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("users.dat"))) {
             users = (Map<String, String>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            // If the file doesn't exist or can't be read, we can ignore it
-            // and start with an empty users map
+            
+            // start with an empty users map
         }
     }
 
